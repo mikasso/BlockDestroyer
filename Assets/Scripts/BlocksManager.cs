@@ -10,7 +10,7 @@ public class BlocksManager : MonoBehaviour
 
     void Start()
     {
-        Instantiate(block, new Vector3(0, 0, 0), Quaternion.identity);
+        Instantiate(block, new Vector3(0, 3.0f, 0), Quaternion.identity);
     }
 
     // Update is called once per frame

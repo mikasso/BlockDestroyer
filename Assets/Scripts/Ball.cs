@@ -2,25 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbstractBlock : MonoBehaviour
+public class Ball : MonoBehaviour
 {
-    public int life;
+    public float velocity;
+    private Rigidbody2D rb;
     // Start is called before the first frame update
     void Start()
     {
-        
+         rb = GetComponent<Rigidbody2D>();
+         rb.velocity = new Vector2(0.0f,velocity);
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        life--;
-        if (life <= 0)
-            Destroy(gameObject);
     }
 }

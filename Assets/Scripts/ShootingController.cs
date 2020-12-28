@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShootingController : MonoBehaviour
@@ -15,7 +14,7 @@ public class ShootingController : MonoBehaviour
     public int ballsAlive = 0;
     private Camera cam;
     private LineRenderer lr;
-    private bool lineIsDrawn = false;
+    private bool lineIsDrawn;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,9 +25,7 @@ public class ShootingController : MonoBehaviour
         lr.material = new Material(lineShader);
         lr.startColor = lr.endColor = lineColor;
         lr.startWidth = lr.endWidth = lineWidth;
-        Vector3 start = new Vector3(0, 0, 0);
-        lr.SetPosition(0, start);
-        lr.SetPosition(1, start);
+        clearLine();
     }
 
     // Update is called once per frame
@@ -38,34 +35,34 @@ public class ShootingController : MonoBehaviour
             return;
 
         if (Input.GetMouseButton(0)) {
-            Vector3 tapPlace = getTapPlace();
-            if (lineIsDrawn == false)
-            {
-                lr.SetPosition(0, new Vector2(tapPlace.x, lineYStart));
-                lineIsDrawn = true;
-                return;
-            }
-            Vector2 direction = new Vector2(tapPlace.x, tapPlace.y);
-            RaycastHit2D hit2D = Physics2D.Raycast(lr.GetPosition(0), direction);
-            lr.SetPosition(1, hit2D.point);
+            reArrangeLine(getTapPlace());
         }
         else if (lineIsDrawn == true) {
             Vector3 velocity = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * Speed;
             StartCoroutine(
-                spawnBall(defaultBall, lr.GetPosition(0), velocity));
-            lr.SetPosition(0, new Vector2(0, 0));
-            lr.SetPosition(1, new Vector2(0, 0));
-            lineIsDrawn = false;
+                spawnBalls(defaultBall, lr.GetPosition(0), velocity));
+            clearLine();
         }
     }
 
-    IEnumerator spawnBall(Ball ball, Vector3 position,Vector3 velocity)
+    private void reArrangeLine(Vector3 tapPoint)
+    {
+        if (lineIsDrawn == false)
+        {
+            lr.SetPosition(0, new Vector2(tapPoint.x, lineYStart));
+            lineIsDrawn = true;
+            return;
+        }
+        RaycastHit2D hit2D = Physics2D.Raycast(lr.GetPosition(0), tapPoint);
+        lr.SetPosition(1, hit2D.point);
+    }
+
+    IEnumerator spawnBalls(Ball ball, Vector3 position,Vector3 velocity)
     {
         for (int i = 0; i < amount; i++)
         {
             Ball newBall = Instantiate(ball, position, Quaternion.identity);
             newBall.Velocity = new Vector2(velocity.x, velocity.y);
-            ballsAlive++;
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -75,7 +72,12 @@ public class ShootingController : MonoBehaviour
         return cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane));
     }
 
-    public void DecrementBallsAlive() {
-        ballsAlive--;
+    void clearLine()
+    {
+        Vector2 point = new Vector2(0, 0);
+        lr.SetPosition(0, point);
+        lr.SetPosition(1, point);
+        lineIsDrawn = false;
     }
+
 }

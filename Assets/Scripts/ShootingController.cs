@@ -5,20 +5,22 @@ using UnityEngine;
 public class ShootingController : MonoBehaviour
 {
     public Ball defaultBall;
-    private Camera cam;
+    public int amount = 5;
     public Shader lineShader;
     public float lineWidth = 0.02f;
     public Color lineColor = Color.gray;
-    private LineRenderer lr;
-    private bool lineIsDrawn = false;
-    private GameObject myLine;
     public float Speed = 3.0f;
     public float lineYStart = 0.3f;
+    
+    public int ballsAlive = 0;
+    private Camera cam;
+    private LineRenderer lr;
+    private bool lineIsDrawn = false;
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
-        myLine = new GameObject();
+        GameObject myLine = new GameObject();
         myLine.AddComponent<LineRenderer>();
         lr = myLine.GetComponent<LineRenderer>();
         lr.material = new Material(lineShader);
@@ -27,14 +29,15 @@ public class ShootingController : MonoBehaviour
         Vector3 start = new Vector3(0, 0, 0);
         lr.SetPosition(0, start);
         lr.SetPosition(1, start);
-        lr.SetPosition(1, new Vector3(1.0f,1.0f,0));
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0)) 
-        {
+        if (GameObject.FindGameObjectWithTag("Ball"))
+            return;
+
+        if (Input.GetMouseButton(0)) {
             Vector3 tapPlace = getTapPlace();
             if (lineIsDrawn == false)
             {
@@ -45,23 +48,26 @@ public class ShootingController : MonoBehaviour
             Vector2 direction = new Vector2(tapPlace.x, tapPlace.y);
             RaycastHit2D hit2D = Physics2D.Raycast(lr.GetPosition(0), direction);
             lr.SetPosition(1, hit2D.point);
-            Debug.Log("Is down");
-            Debug.Log(hit2D.point);
-        } 
-        else if(lineIsDrawn == true) {
-            Ball newBall = spawnBall(defaultBall, lr.GetPosition(0));
-            Vector3 velocity3D = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * Speed;
-            newBall.Velocity = new Vector2(velocity3D.x, velocity3D.y);
-            lr.SetPosition(0, new Vector2(0,0));
+        }
+        else if (lineIsDrawn == true) {
+            Vector3 velocity = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * Speed;
+            StartCoroutine(
+                spawnBall(defaultBall, lr.GetPosition(0), velocity));
+            lr.SetPosition(0, new Vector2(0, 0));
             lr.SetPosition(1, new Vector2(0, 0));
             lineIsDrawn = false;
         }
     }
 
-    Ball spawnBall(Ball ball,Vector3 position)
+    IEnumerator spawnBall(Ball ball, Vector3 position,Vector3 velocity)
     {
-        position.y = 0.3f;
-        return Instantiate(ball, position, Quaternion.identity);
+        for (int i = 0; i < amount; i++)
+        {
+            Ball newBall = Instantiate(ball, position, Quaternion.identity);
+            newBall.Velocity = new Vector2(velocity.x, velocity.y);
+            ballsAlive++;
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     Vector3 getTapPlace()
@@ -69,4 +75,7 @@ public class ShootingController : MonoBehaviour
         return cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane));
     }
 
+    public void DecrementBallsAlive() {
+        ballsAlive--;
+    }
 }

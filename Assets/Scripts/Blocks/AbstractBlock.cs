@@ -5,20 +5,19 @@ using UnityEngine;
 public class AbstractBlock : MonoBehaviour
 {
     public int life;
+    public PlayerManager player;
+    
+    private int hitValue = 1;
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject obj = GameObject.Find("Player");
+        player = obj.GetComponent<PlayerManager>();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        player.IncreaseScore(hitValue);
         life--;
         if (life <= 0)
             Destroy(gameObject);

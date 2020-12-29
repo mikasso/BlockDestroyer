@@ -5,14 +5,9 @@ using UnityEngine;
 public class BlueBlock : AbstractBlock
 {
     // Start is called before the first frame update
-    void Start()
+    override protected void Start()
     {
-        
+        base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    } 
 }

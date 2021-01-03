@@ -119,6 +119,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 5
+  player: {fileID: 0}
+  blast: {fileID: 3166225013843347396, guid: 5a6181a2c465aca45b5c7f57a5dd62ab, type: 3}
 --- !u!61 &65902382889284100
 BoxCollider2D:
   m_ObjectHideFlags: 0

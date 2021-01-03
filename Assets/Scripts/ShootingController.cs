@@ -78,7 +78,21 @@ public class ShootingController : MonoBehaviour
             newBall.Velocity = new Vector2(velocity.x, velocity.y);
             yield return new WaitForSeconds(shootingIntervals);
         }
-        amount += 1;
+        onEndOfShooting();
+    }
+
+    private void onEndOfShooting()
+    {
+        BlocksManager bm = GetComponent<BlocksManager>();
+        if (bm.GenerateNewLineOfBlocks() == true)
+        {
+            amount += 1;
+        }
+        else // it s lost game
+        {
+            PlayerManager pm = GetComponent<PlayerManager>();
+            pm.LostGame();
+        }
     }
 
     void clearLine()

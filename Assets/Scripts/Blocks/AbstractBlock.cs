@@ -7,31 +7,39 @@ public class AbstractBlock : MonoBehaviour
 {
     public int life;
     public PlayerManager player;
-    public Text mytext;
-    public ParticleSystem ps;
+    public Canvas canvas;
+    public GameObject particleObject;
 
+    private Text textInfo;
     private int hitValue = 1;
     // Start is called before the first frame update
     protected virtual void Start()
     {
-       // ps.Pause();
-        mytext.text = life.ToString();
-        mytext.fontSize = 23;
-        RectTransform rt = mytext.GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector3(transform.position.x*179-525.5f, transform.position.y*179-926.0f, 0);
+        // ps.Pause();
+        canvas = gameObject.GetComponentInChildren<Canvas>();
+        canvas.worldCamera = Camera.main;
+        textInfo = canvas.GetComponentInChildren<Text>();
         GameObject obj = GameObject.Find("Player");
         player = obj.GetComponent<PlayerManager>();
+        updateLifeScore();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Ball ball = collision.gameObject.GetComponent<Ball>();
         player.IncreaseScore(hitValue);
-        mytext.text = life.ToString();
-        life--;
-       //             ps.Emit(100);
+        life -= ball.damage;
         if (life <= 0)
         {
             Destroy(gameObject);
         }
+        else
+            updateLifeScore();
+        Instantiate(particleObject, transform.position, Quaternion.identity);
+    }
+
+    private void updateLifeScore()
+    {
+        textInfo.text = life.ToString();
     }
 }

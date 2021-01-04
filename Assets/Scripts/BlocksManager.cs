@@ -15,24 +15,45 @@ public class BlocksManager : MonoBehaviour
     public float topY = 10.0f;
     public float blockSize = 1.0f;
 
+    /// Not needed, delete later..
     void Start()
-    {
-        //ps = (ParticleSystem)Resources.Load("Prefabs/Particle System", typeof(ParticleSystem));
-        //Instantiate(ps, new Vector3(3.0f,5.0f,0), Quaternion.identity);
-        //ps.Stop();
-        for (int i=0; i<rows; i++)
-        {
-            for(int j=0; j<blocksInRow; j++)
-            {
-                Instantiate(block, new Vector3(leftX+ blockSize*j+2.5f, topY - blockSize*i-6.0f, 0), Quaternion.identity);//4x6 klocow
-            }
-        }
-    }
+      {
+          for (int i=0; i<rows; i++)
+          {
+              for(int j=0; j<blocksInRow; j++)
+              {
+                  Instantiate(block, new Vector3(leftX+ blockSize*j, topY - blockSize*i, 0), Quaternion.identity);//4x6 klocow
+              }
+          }
+      }
+    
 
+    //TODO
+    /// <summary>
+    /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
+    /// </summary>
     internal bool GenerateNewLineOfBlocks()
     {
-        throw new NotImplementedException();
+        moveAllBlocksLevelsDown(level: 1);
+        //TODO
+        return true;
     }
 
+    private void moveAllBlocksLevelsDown(int level)
+    {
+       
+    }
 
+    internal void SaveBlocks()
+    {
+       
+    }
+    internal void LoadBlocks()
+    {
+       
+    }
+    internal void ForgotBlocks()
+    {
+        
+    }
 }

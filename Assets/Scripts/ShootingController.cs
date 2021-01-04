@@ -9,13 +9,14 @@ public class ShootingController : MonoBehaviour
     public Material lineMaterial;
     public float speed = 3.0f;
     public float lineYStart = 0.3f;
-    public int initialBallsAmount = 5;
+    public float minYLevel = 0.3f;
 
     private Camera cam;
     private LineRenderer lr;
     private bool lineIsDrawn;
     private int amount;
     private Ball ball;
+    private bool endOfShooting;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,7 @@ public class ShootingController : MonoBehaviour
     private void initShootingParameters()
     {
         PlayerManager player = GetComponent<PlayerManager>();
-        amount = player.ReadAmount();
+        amount = player.ReadInteger(PlayerManager.Key.BallAmount, player.InitalBallsAmount);
         string ballPath = "Prefabs/" + player.ReadBallName();
         ball = Resources.Load<GameObject>(ballPath).GetComponent<Ball>();
     }
@@ -44,24 +45,40 @@ public class ShootingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameObject.FindGameObjectWithTag("Ball"))
+        if (CheckIfCanShoot() == false)
             return;
 
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0)) 
             reArrangeLine(getTapPlace());
-        }
         else if (lineIsDrawn == true) {
             Vector3 velocity = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * speed;
             StartCoroutine(
                 spawnBalls(ball, lr.GetPosition(0), velocity));
             clearLine();
+            endOfShooting = true;
         }
     }
 
+    private bool CheckIfCanShoot()
+    {
+        if (GameObject.FindGameObjectWithTag("Ball"))
+            return false;
+        else if (endOfShooting == true)
+        {
+            endOfShooting = false;
+            onEndOfShooting();
+            return true;
+        }
+        else
+            return true;
+    }
     private void reArrangeLine(Vector3 tapPoint)
     {
-        if (lineIsDrawn == false)
-        {
+        if (tapPoint.y < minYLevel){
+            clearLine();
+            return;
+        }
+        if (lineIsDrawn == false){
             lr.SetPosition(0, new Vector2(tapPoint.x, lineYStart));
             lineIsDrawn = true;
             return;
@@ -78,19 +95,19 @@ public class ShootingController : MonoBehaviour
             newBall.Velocity = new Vector2(velocity.x, velocity.y);
             yield return new WaitForSeconds(shootingIntervals);
         }
-        onEndOfShooting();
     }
 
     private void onEndOfShooting()
     {
+        PlayerManager pm = GetComponent<PlayerManager>();
         BlocksManager bm = GetComponent<BlocksManager>();
         if (bm.GenerateNewLineOfBlocks() == true)
         {
             amount += 1;
+            pm.IncreaseBallsAmount();
         }
-        else // it s lost game
+        else // it s a lost game, end..
         {
-            PlayerManager pm = GetComponent<PlayerManager>();
             pm.LostGame();
         }
     }

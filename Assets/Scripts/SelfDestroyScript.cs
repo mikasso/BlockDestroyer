@@ -3,9 +3,9 @@ using System.Collections;
 
 public class SelfDestroyScript : MonoBehaviour 
 {
-	
+	public float lifeTime;
 	void Start () 
 	{
-		Destroy (gameObject, 3.0f);
+		Destroy (gameObject, lifeTime);
 	}
 }

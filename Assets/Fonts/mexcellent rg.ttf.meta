@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 28aa3f955a3f91c4cb18cae1c7981d39
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Mexcellent
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d38d15f4ef681ce438ee9d8448663400, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

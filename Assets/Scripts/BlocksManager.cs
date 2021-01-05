@@ -14,11 +14,11 @@ public class BlocksManager : MonoBehaviour
     public  float leftX = 0.45f;
     public float topY = 10.0f;
     public float blockSize = 1.0f;
-    private string BlockFilePath;
+    private string BlocksFilePath;
     private int hardnessLevel = 22;
     private void Start()
     {
-        BlockFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
+        BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
     }
     /// <summary>
     /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>

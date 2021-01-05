@@ -15,7 +15,7 @@ public class BlocksManager : MonoBehaviour
     public float topY = 10.0f;
     public float blockSize = 1.0f;
     private string BlocksFilePath;
-    private int hardnessLevel = 22;
+    private int hardnessLevel = 10;
     private void Start()
     {
         BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 

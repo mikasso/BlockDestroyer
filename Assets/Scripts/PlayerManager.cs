@@ -20,7 +20,9 @@ public class PlayerManager : MonoBehaviour
     public Text bestText;
     public Text scoreText;
     public Text ballsText;
+    public Canvas canvasGameOverModel;
 
+    private Canvas displayedCanvas;
     private BlocksManager bm;
     private int score = 0;
     private int bestScore = 0;
@@ -35,34 +37,21 @@ public class PlayerManager : MonoBehaviour
     }
     public void Start()
     {
+        canvasGameOverModel.worldCamera = Camera.main;
+
         bm = GetComponent<BlocksManager>();
         if (PlayerPrefs.HasKey(Key.GameIsSaved) == true)
             bm.LoadBlocks();
         else
             bm.GenerateNewLineOfBlocks();
-        
+
         bestScore = ReadInteger(Key.BestScore);
         score = ReadInteger(Key.LastScore);
-        ballsAmount = ReadInteger(Key.BallAmount,InitalBallsAmount);
+        ballsAmount = ReadInteger(Key.BallAmount, InitalBallsAmount);
         updateBallsAmount();
         updateScore();
         updateBest();
     }
-
-    private void updateScore()
-    {
-        scoreText.text = "Score: "+score.ToString();
-    }
-    private void updateBallsAmount()
-    {
-        ballsText.text = "Balls: "+ballsAmount.ToString();
-    }
-
-    private void updateBest()
-    {
-        bestText.text = "Best: "+ bestScore.ToString();
-    }
-
     public void IncreaseScore(int value)
     {
         score += value;
@@ -81,7 +70,7 @@ public class PlayerManager : MonoBehaviour
         else
             return defaultValue;
     }
-       
+
     internal string ReadBallName()
     {
         if (PlayerPrefs.HasKey("BallName"))
@@ -89,16 +78,20 @@ public class PlayerManager : MonoBehaviour
         else
             return DefaultBallName;
     }
-
     public void SaveGame()
     {
         ShootingController controller = GetComponent<ShootingController>();
         PlayerPrefs.SetInt(Key.LastScore, score);
-        PlayerPrefs.SetInt(Key.BallAmount,controller.Amount);
+        PlayerPrefs.SetInt(Key.BallAmount, controller.Amount);
         PlayerPrefs.SetString(Key.LastBall, controller.BallName);
         PlayerPrefs.SetInt(Key.GameIsSaved, 1);
         bm.SaveBlocks();
         PlayerPrefs.Save();
+        LoadMenu();
+    }
+
+    public static void LoadMenu()
+    {
         SceneManager.LoadScene("Menu");
     }
 
@@ -106,13 +99,29 @@ public class PlayerManager : MonoBehaviour
     {
         ForgetPlayerVariables();
         bm.ForgetBlocks();
-        //set new best score
-        if(bestScore < score)
-        {
+        setNewBestScore();
+        displayedCanvas = Instantiate(canvasGameOverModel);
+    }
+
+    private void setNewBestScore()
+    {
+        if (bestScore < score)  {
             PlayerPrefs.SetInt(Key.BestScore, score);
             PlayerPrefs.Save();
         }
     }
 
+    private void updateScore()
+    {
+        scoreText.text = "Score: " + score.ToString();
+    }
+    private void updateBallsAmount()
+    {
+        ballsText.text = "Balls: " + ballsAmount.ToString();
+    }
 
+    private void updateBest()
+    {
+        bestText.text = "Best: " + bestScore.ToString();
+    }
 }

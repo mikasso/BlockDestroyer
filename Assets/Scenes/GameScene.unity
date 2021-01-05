@@ -180,6 +180,7 @@ MonoBehaviour:
   leftX: 0.45
   topY: 8.5
   blockSize: 1
+  minBlockLevel: 2
 --- !u!4 &52771927
 Transform:
   m_ObjectHideFlags: 0
@@ -210,6 +211,7 @@ MonoBehaviour:
   bestText: {fileID: 239534260}
   scoreText: {fileID: 1945746495}
   ballsText: {fileID: 1799041257}
+  canvasGameOverModel: {fileID: 5636750776492293701, guid: c641137d03e3db44f942bd1e7c414dff, type: 3}
 --- !u!114 &52771929
 MonoBehaviour:
   m_ObjectHideFlags: 0

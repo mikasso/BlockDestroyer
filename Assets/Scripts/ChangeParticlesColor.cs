@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ChangeParticlesColor : MonoBehaviour
 {
-    
-    
+    private void Start()
+    {
+        
+    }
+
 
 }

@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour
 {
-  public void OnNewGameButton()
+      public void OnNewGameButton()
+      {
+        PlayerManager.ForgetPlayerVariables();
+        SceneManager.LoadScene("GameScene");
+      }
+
+    public void OnLoadGameButton()
     {
         SceneManager.LoadScene("GameScene");
     }

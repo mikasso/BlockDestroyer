@@ -14,8 +14,12 @@ public class BlocksManager : MonoBehaviour
     public  float leftX = 0.45f;
     public float topY = 10.0f;
     public float blockSize = 1.0f;
-
-    private int hardnessLevel = 1;
+    private string BlocksFilePath;
+    private int hardnessLevel = 22;
+    private void Start()
+    {
+        BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
+    }
     /// <summary>
     /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
     /// </summary>
@@ -56,7 +60,7 @@ public class BlocksManager : MonoBehaviour
     internal void SaveBlocks()
     {
        BinaryFormatter bf = new BinaryFormatter();
-	   FileStream file = File.Create(Application.persistentDataPath + "/gameInfo.dat");
+	   FileStream file = File.Create(BlocksFilePath);
 	   GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
 	   BlockData bd = new BlockData(arr.Length);
 	   int i=0;
@@ -79,10 +83,10 @@ public class BlocksManager : MonoBehaviour
 	
     internal void LoadBlocks()
     {
-		if(File.Exists(Application.persistentDataPath + "/gameInfo.dat"))
+		if(File.Exists(BlocksFilePath))
 		{
 		   BinaryFormatter bf = new BinaryFormatter();
-		   FileStream file = File.Open(Application.persistentDataPath + "/gameInfo.dat", FileMode.Open);
+		   FileStream file = File.Open(BlocksFilePath, FileMode.Open);
 		   BlockData bd = (BlockData)bf.Deserialize(file);
 		   file.Close();
 		   for(int i=0; i<bd.amtOfBlocks; i++){
@@ -94,22 +98,23 @@ public class BlocksManager : MonoBehaviour
 		   }
 		}
 	}
-    internal void ForgotBlocks()
+    internal void ForgetBlocks()
     {
-        
+        File.Delete(BlocksFilePath);
     }
-}
 
-[Serializable]
-class BlockData
-{
-	public int amtOfBlocks;
-	public int[] life;//
-	public float[,] color;
-	public float[,] position;
-	public BlockData(int size){
-		color = new float[size,4];
-		position = new float[size,2];
-		life = new int[size];
-	}
+    [Serializable]
+    class BlockData
+    {
+        public int amtOfBlocks;
+        public int[] life;//
+        public float[,] color;
+        public float[,] position;
+        public BlockData(int size)
+        {
+            color = new float[size, 4];
+            position = new float[size, 2];
+            life = new int[size];
+        }
+    }
 }

@@ -18,6 +18,6 @@ public class ColorfulBlock : AbstractBlock
 
     public void setRandomColor()
     {
-
+        GetComponent<SpriteRenderer>().color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
     }
 }

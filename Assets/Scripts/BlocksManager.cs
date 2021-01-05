@@ -34,18 +34,18 @@ public class BlocksManager : MonoBehaviour
 
     private void randomizeBlock()
     {
-        AbstractBlock abstractBlock = block.GetComponent<AbstractBlock>();
-        abstractBlock.life = UnityEngine.Random.Range(hardnessLevel / 4, hardnessLevel);
-        SpriteRenderer rend = block.GetComponent<SpriteRenderer>();
-        rend.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
+        ColorfulBlock colorfulBlock = block.GetComponent<ColorfulBlock>();
+        colorfulBlock.life = UnityEngine.Random.Range(hardnessLevel / 4, hardnessLevel);
+        colorfulBlock.setRandomColor();
     }
 
     private void generateLine(int level)
     {
         for (int j = 0; j < blocksInRow; j++)
         {
+            Vector3 pos = new Vector3(leftX + blockSize * j, topY - blockSize * level, 0);
             randomizeBlock();
-            Instantiate(block, new Vector3(leftX + blockSize * j, topY - blockSize * level, 0), Quaternion.identity);//4x6 klocow
+            Instantiate(block,pos, Quaternion.identity);//4x6 klocow
         }
     }
 

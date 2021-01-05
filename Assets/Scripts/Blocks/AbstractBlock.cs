@@ -11,7 +11,6 @@ public class AbstractBlock : MonoBehaviour
     public Canvas canvas;
     public GameObject particleObject;
     
-    protected SpriteRenderer rend;
     protected Text textInfo;
     protected int hitValue = 1;
     // Start is called before the first frame update
@@ -23,7 +22,6 @@ public class AbstractBlock : MonoBehaviour
         textInfo = canvas.GetComponentInChildren<Text>();
         GameObject obj = GameObject.Find("Player");
         player = obj.GetComponent<PlayerManager>();
-        rend = gameObject.GetComponent<SpriteRenderer>();
         updateLifeScore();
     }
 

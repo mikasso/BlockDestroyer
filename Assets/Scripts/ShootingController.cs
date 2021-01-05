@@ -8,8 +8,9 @@ public class ShootingController : MonoBehaviour
     public float lineWidth = 0.02f;
     public Material lineMaterial;
     public float speed = 3.0f;
-    public float lineYStart = 0.3f;
-    public float minYLevel = 0.3f;
+    public float minY = 0.3f;
+    public float minX = 0.15f;
+    public float maxX = 8.77f;
 
     private Camera cam;
     private LineRenderer lr;
@@ -74,16 +75,19 @@ public class ShootingController : MonoBehaviour
     }
     private void reArrangeLine(Vector3 tapPoint)
     {
-        if (tapPoint.y < minYLevel){
+        if (tapPoint.y <= minY){
             clearLine();
             return;
         }
         if (lineIsDrawn == false){
-            lr.SetPosition(0, new Vector2(tapPoint.x, lineYStart));
+            tapPoint.x = adjustXPos(tapPoint.x);
+            lr.SetPosition(0, new Vector2(tapPoint.x, minY));
             lineIsDrawn = true;
             return;
         }
-        RaycastHit2D hit2D = Physics2D.Raycast(lr.GetPosition(0), tapPoint);
+        Vector2 origin = lr.GetPosition(0);
+        Vector2 direction = new Vector2(tapPoint.x - origin.x, tapPoint.y - origin.y);
+        RaycastHit2D hit2D = Physics2D.Raycast(origin, direction);
         lr.SetPosition(1, hit2D.point);
     }
 
@@ -122,6 +126,15 @@ public class ShootingController : MonoBehaviour
     Vector3 getTapPlace()
     {
         return cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane));
+    }
+
+    private float adjustXPos(float x)
+    {
+        if (x < minX)
+            return minX;
+        if (x > maxX)
+            return maxX;
+        return x;
     }
 
     public int Amount { get { return amount; } }

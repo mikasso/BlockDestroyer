@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 65902382889284100}
   m_Layer: 0
   m_Name: BlueSquare
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 0ef1d9735665d7849afdc68d3ce045b2, type: 3}
-  m_Color: {r: 0, g: 0.6099918, b: 1, a: 1}
+  m_Color: {r: 0.15245752, g: 0, b: 0.88908523, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f09e566133ee3f346b34ec6603b6ef7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 5
+  life: 1
   player: {fileID: 0}
   canvas: {fileID: 233994685690826763, guid: 00edd2a588a379e43a29c6d6081dab5b, type: 3}
   particleObject: {fileID: 7672876996085062854, guid: 4004ea77b5112b943af784fd322549b8, type: 3}

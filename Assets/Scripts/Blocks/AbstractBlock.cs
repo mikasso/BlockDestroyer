@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class AbstractBlock : MonoBehaviour
 {
@@ -35,6 +36,7 @@ public class AbstractBlock : MonoBehaviour
         }
         else
             updateLifeScore();
+        
         Instantiate(particleObject, transform.position, Quaternion.identity);
     }
 
@@ -42,4 +44,5 @@ public class AbstractBlock : MonoBehaviour
     {
         textInfo.text = life.ToString();
     }
+	
 }

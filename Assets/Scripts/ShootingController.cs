@@ -9,6 +9,7 @@ public class ShootingController : MonoBehaviour
     public Material lineMaterial;
     public float speed = 3.0f;
     public float minY = 0.3f;
+    public float maxY = 9.0f;
     public float minX = 0.15f;
     public float maxX = 8.77f;
 
@@ -49,15 +50,16 @@ public class ShootingController : MonoBehaviour
         if (CheckIfCanShoot() == false)
             return;
 
-        if (Input.GetMouseButton(0)) 
-            reArrangeLine(getTapPlace());
-        else if (lineIsDrawn == true) {
-            Vector3 velocity = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * speed;
-            StartCoroutine(
-                spawnBalls(ball, lr.GetPosition(0), velocity));
-            clearLine();
-            endOfShooting = true;
-        }
+        if (Input.GetMouseButton(0)) {
+           Vector3 tapPoint = getTapPlace();
+            if (checkIfYIsInScope(tapPoint.y) == false) 
+                clearLine();
+            else if (lineIsDrawn == false) 
+                initLine(tapPoint);
+            else
+                reArrangeLine(tapPoint);
+        } else if (lineIsDrawn == true)
+            startShooting();
     }
 
     private bool CheckIfCanShoot()
@@ -73,24 +75,29 @@ public class ShootingController : MonoBehaviour
         else
             return true;
     }
+
+    private void initLine(Vector3 tapPoint)
+    {
+        tapPoint.x = adjustXPos(tapPoint.x);
+        lr.SetPosition(0, new Vector2(tapPoint.x, minY));
+        lineIsDrawn = true;
+    }
     private void reArrangeLine(Vector3 tapPoint)
     {
-        if (tapPoint.y <= minY){
-            clearLine();
-            return;
-        }
-        if (lineIsDrawn == false){
-            tapPoint.x = adjustXPos(tapPoint.x);
-            lr.SetPosition(0, new Vector2(tapPoint.x, minY));
-            lineIsDrawn = true;
-            return;
-        }
         Vector2 origin = lr.GetPosition(0);
         Vector2 direction = new Vector2(tapPoint.x - origin.x, tapPoint.y - origin.y);
         RaycastHit2D hit2D = Physics2D.Raycast(origin, direction);
         lr.SetPosition(1, hit2D.point);
     }
 
+    private void startShooting()
+    {
+        Vector3 velocity = Vector3.Normalize(lr.GetPosition(1) - lr.GetPosition(0)) * speed;
+        StartCoroutine(
+            spawnBalls(ball, lr.GetPosition(0), velocity));
+        clearLine();
+        endOfShooting = true;
+    }
     IEnumerator spawnBalls(Ball ball, Vector3 position,Vector3 velocity)
     {
         for (int i = 0; i < amount; i++)
@@ -135,6 +142,13 @@ public class ShootingController : MonoBehaviour
         if (x > maxX)
             return maxX;
         return x;
+    }
+
+    private bool checkIfYIsInScope(float y)
+    {
+        if (y < minY || y > maxY)
+            return false;
+        return true;
     }
 
     public int Amount { get { return amount; } }

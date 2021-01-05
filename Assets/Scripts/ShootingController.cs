@@ -74,7 +74,7 @@ public class ShootingController : MonoBehaviour
     }
     private void reArrangeLine(Vector3 tapPoint)
     {
-        if (tapPoint.y < minYLevel){
+        if (tapPoint.y <= minYLevel){
             clearLine();
             return;
         }
@@ -83,7 +83,9 @@ public class ShootingController : MonoBehaviour
             lineIsDrawn = true;
             return;
         }
-        RaycastHit2D hit2D = Physics2D.Raycast(lr.GetPosition(0), tapPoint);
+        Vector2 origin = lr.GetPosition(0);
+        Vector2 direction = new Vector2(tapPoint.x - origin.x, tapPoint.y - origin.y);
+        RaycastHit2D hit2D = Physics2D.Raycast(origin, direction);
         lr.SetPosition(1, hit2D.point);
     }
 

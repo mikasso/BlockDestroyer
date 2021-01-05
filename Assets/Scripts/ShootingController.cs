@@ -9,6 +9,7 @@ public class ShootingController : MonoBehaviour
     public Material lineMaterial;
     public float speed = 3.0f;
     public float minY = 0.3f;
+    public float maxY = 9.0f;
     public float minX = 0.15f;
     public float maxX = 8.77f;
 
@@ -75,7 +76,7 @@ public class ShootingController : MonoBehaviour
     }
     private void reArrangeLine(Vector3 tapPoint)
     {
-        if (tapPoint.y <= minY){
+        if (checkIfYIsInScope(tapPoint.y) == false){
             clearLine();
             return;
         }
@@ -135,6 +136,13 @@ public class ShootingController : MonoBehaviour
         if (x > maxX)
             return maxX;
         return x;
+    }
+
+    private bool checkIfYIsInScope(float y)
+    {
+        if (y < minY || y > maxY)
+            return false;
+        return true;
     }
 
     public int Amount { get { return amount; } }

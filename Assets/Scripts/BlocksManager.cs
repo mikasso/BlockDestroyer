@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class BlocksManager : MonoBehaviour
 {
-    // Start is called before the first frame updateffd
     public GameObject block;
-    public ParticleSystem ps;
     public int amount;
     public const int blocksInRow = 6;
     public const int rows = 4;
@@ -16,7 +14,6 @@ public class BlocksManager : MonoBehaviour
     public float blockSize = 1.0f;
 
     private int hardnessLevel = 1;
-    //TODO
     /// <summary>
     /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
     /// </summary>

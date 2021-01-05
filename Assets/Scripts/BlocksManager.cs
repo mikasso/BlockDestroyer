@@ -62,9 +62,9 @@ public class BlocksManager : MonoBehaviour
 	   FileStream file = File.Create(Application.persistentDataPath + "/gameInfo.dat");
 	   GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
 	   BlockData bd = new BlockData(arr.Length);
+	   int i=0;
 	   foreach(GameObject blockObject in arr)
 	   {
-		   int i=0;
 		   SpriteRenderer rend = blockObject.GetComponent<SpriteRenderer>();
 		   bd.color[i,0] = rend.color[0];
 		   bd.color[i,1] = rend.color[1];

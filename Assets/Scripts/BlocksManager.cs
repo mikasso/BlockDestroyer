@@ -59,7 +59,7 @@ public class BlocksManager : MonoBehaviour
     {
        
     }
-    internal void ForgotBlocks()
+    internal void ForgetBlocks()
     {
         
     }

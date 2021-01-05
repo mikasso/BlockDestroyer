@@ -7,7 +7,6 @@ using System.IO;
 
 public class BlocksManager : MonoBehaviour
 {
-    // Start is called before the first frame updateffd
     public GameObject block;
     public ParticleSystem ps;
     public int amount;
@@ -106,18 +105,19 @@ public class BlocksManager : MonoBehaviour
     {
         File.Delete(BlocksFilePath);
     }
-}
 
-[Serializable]
-class BlockData
-{
-	public int amtOfBlocks;
-	public int[] life;//
-	public float[,] color;
-	public float[,] position;
-	public BlockData(int size){
-		color = new float[size,4];
-		position = new float[size,2];
-		life = new int[size];
-	}
+    [Serializable]
+    class BlockData
+    {
+        public int amtOfBlocks;
+        public int[] life;//
+        public float[,] color;
+        public float[,] position;
+        public BlockData(int size)
+        {
+            color = new float[size, 4];
+            position = new float[size, 2];
+            life = new int[size];
+        }
+    }
 }

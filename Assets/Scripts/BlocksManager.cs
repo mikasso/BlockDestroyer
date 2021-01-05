@@ -13,7 +13,7 @@ public class BlocksManager : MonoBehaviour
     public float topY = 10.0f;
     public float blockSize = 1.0f;
 
-    private int hardnessLevel = 1;
+    private int hardnessLevel = 22;
     /// <summary>
     /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
     /// </summary>

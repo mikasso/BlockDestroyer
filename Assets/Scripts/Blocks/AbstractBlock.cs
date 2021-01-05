@@ -9,7 +9,6 @@ public class AbstractBlock : MonoBehaviour
     public int life;
     public PlayerManager player;
     public Canvas canvas;
-    public GameObject particleObject;
     
     protected Text textInfo;
     protected int hitValue = 1;
@@ -36,8 +35,6 @@ public class AbstractBlock : MonoBehaviour
         }
         else
             updateLifeScore();
-        
-        Instantiate(particleObject, transform.position, Quaternion.identity);
     }
 
     private void updateLifeScore()

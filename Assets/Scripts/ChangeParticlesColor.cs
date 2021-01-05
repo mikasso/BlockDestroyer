@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class ChangeParticlesColor : MonoBehaviour
 {
-    private void Start()
-    {
-        
-    }
-
-
+       /* void Update()
+        {
+            ParticleSystem.MainModule newMain = GetComponent<ParticleSystem>().main;
+            newMain.startColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
+        }*/
 }

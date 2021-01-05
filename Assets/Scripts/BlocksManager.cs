@@ -8,7 +8,6 @@ using System.IO;
 public class BlocksManager : MonoBehaviour
 {
     public GameObject block;
-    public int amount;
     public const int blocksInRow = 6;
     public const int rows = 4;
     public  float leftX = 0.45f;
@@ -17,7 +16,7 @@ public class BlocksManager : MonoBehaviour
     public float minBlockLevel = 2.0f;
 
     private string BlocksFilePath;
-    private int hardnessLevel = 10;
+    public int hardnessLevel = 10;
     private void Start()
     {
         BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 

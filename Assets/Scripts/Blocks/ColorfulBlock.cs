@@ -5,6 +5,7 @@ using UnityEngine;
 public class ColorfulBlock : AbstractBlock
 {
     // Start is called before the first frame update
+    public GameObject particleObject;
     override protected void Start()
     {
         base.Start();
@@ -13,6 +14,9 @@ public class ColorfulBlock : AbstractBlock
     override protected void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
+        ParticleSystem.MainModule newMain = particleObject.GetComponentInChildren<ParticleSystem>().main;
+        newMain.startColor = GetComponent<SpriteRenderer>().color;
+        Instantiate(particleObject, collision.transform.position, Quaternion.identity);
         setRandomColor();
     }
 

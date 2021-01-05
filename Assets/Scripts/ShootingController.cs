@@ -120,6 +120,7 @@ public class ShootingController : MonoBehaviour
         else // it s a lost game, end..
         {
             pm.LostGame();
+            enabled = false; // turn off this component.. no more shooting ;(
         }
     }
 

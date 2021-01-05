@@ -14,8 +14,10 @@ public class BlocksManager : MonoBehaviour
     public  float leftX = 0.45f;
     public float topY = 10.0f;
     public float blockSize = 1.0f;
+    public float minBlockLevel = 2.0f;
+
     private string BlocksFilePath;
-    private int hardnessLevel = 22;
+    private int hardnessLevel = 10;
     private void Start()
     {
         BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
@@ -33,7 +35,7 @@ public class BlocksManager : MonoBehaviour
     private void randomizeBlock()
     {
         AbstractBlock abstractBlock = block.GetComponent<AbstractBlock>();
-        abstractBlock.life = UnityEngine.Random.Range(1, hardnessLevel);
+        abstractBlock.life = UnityEngine.Random.Range(hardnessLevel / 4, hardnessLevel);
         SpriteRenderer rend = block.GetComponent<SpriteRenderer>();
         rend.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
     }
@@ -50,9 +52,11 @@ public class BlocksManager : MonoBehaviour
     private bool moveAllBlocksLevelsDown(int level)
     {
         GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
-        foreach(GameObject blockObject in arr)
+        foreach (GameObject blockObject in arr)
         {
             blockObject.transform.Translate(new Vector3(0, -1.0f));
+            if (blockObject.transform.position.y < minBlockLevel)
+                return false;
         }
         return true;
     }

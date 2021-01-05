@@ -10,9 +10,10 @@ public class AbstractBlock : MonoBehaviour
     public PlayerManager player;
     public Canvas canvas;
     public GameObject particleObject;
-
-    private Text textInfo;
-    private int hitValue = 1;
+    
+    protected SpriteRenderer rend;
+    protected Text textInfo;
+    protected int hitValue = 1;
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -22,10 +23,11 @@ public class AbstractBlock : MonoBehaviour
         textInfo = canvas.GetComponentInChildren<Text>();
         GameObject obj = GameObject.Find("Player");
         player = obj.GetComponent<PlayerManager>();
+        rend = gameObject.GetComponent<SpriteRenderer>();
         updateLifeScore();
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         Ball ball = collision.gameObject.GetComponent<Ball>();
         player.IncreaseScore(hitValue);

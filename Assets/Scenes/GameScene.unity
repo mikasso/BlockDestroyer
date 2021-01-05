@@ -157,8 +157,9 @@ MonoBehaviour:
   shootingIntervals: 0.1
   lineWidth: 0.05
   lineMaterial: {fileID: 2100000, guid: 3fcf556ef99329c41a789f6f46bf3788, type: 2}
-  speed: 3
+  speed: 3.5
   lineYStart: 0.2
+  minYLevel: 0.3
 --- !u!114 &52771926
 MonoBehaviour:
   m_ObjectHideFlags: 0

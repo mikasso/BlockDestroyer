@@ -35,6 +35,7 @@ public class AbstractBlock : MonoBehaviour
         }
         else
             updateLifeScore();
+        
         Instantiate(particleObject, transform.position, Quaternion.identity);
     }
 

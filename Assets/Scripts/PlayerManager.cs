@@ -27,11 +27,13 @@ public class PlayerManager : MonoBehaviour
     private int ballsAmount;
     public void Start()
     {
+        bm = GetComponent<BlocksManager>();
         if (PlayerPrefs.HasKey(Key.GameIsSaved) == true)
         {
-            bm = GetComponent<BlocksManager>();
             bm.LoadBlocks();
         }
+        else
+            bm.GenerateNewLineOfBlocks();
         
         bestScore = ReadInteger(Key.BestScore);
         score = ReadInteger(Key.LastScore);

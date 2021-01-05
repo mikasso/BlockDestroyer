@@ -25,7 +25,6 @@ public class BlocksManager : MonoBehaviour
         hardnessLevel++;
         generateLine(-1);
         return moveAllBlocksLevelsDown(level: 1);
-        //TODO
     }
 
     private void randomizeBlock()

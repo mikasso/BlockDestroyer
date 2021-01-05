@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
         public const string BallAmount = "BallAmount";
         public const string GameIsSaved = "GameIsSaved";
     }
-    public int InitalBallsAmount = 10;
+    public int InitalBallsAmount = 1;
     public const string DefaultBallName = "BlueBall";
     public Text bestText;
     public Text scoreText;

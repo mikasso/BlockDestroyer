@@ -8,7 +8,6 @@ using System.IO;
 public class BlocksManager : MonoBehaviour
 {
     public GameObject block;
-    public int amount;
     public const int blocksInRow = 6;
     public const int rows = 4;
     public  float leftX = 0.45f;
@@ -17,48 +16,48 @@ public class BlocksManager : MonoBehaviour
     public float minBlockLevel = 2.0f;
 
     private string BlocksFilePath;
-    private int hardnessLevel = 10;
+    public int hardnessLevel = 10;
     private void Start()
     {
         BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
     }
-    /// <summary>
-    /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
-    /// </summary>
-    internal bool GenerateNewLineOfBlocks()
+
+    internal void GenerateNewLineOfBlocks()
     {
         hardnessLevel++;
         generateLine(-1);
-        return moveAllBlocksLevelsDown(level: 1);
+        moveAllBlocksLevelsDown(level: 1);
     }
 
     private void randomizeBlock()
     {
-        AbstractBlock abstractBlock = block.GetComponent<AbstractBlock>();
-        abstractBlock.life = UnityEngine.Random.Range(hardnessLevel / 4, hardnessLevel);
-        SpriteRenderer rend = block.GetComponent<SpriteRenderer>();
-        rend.color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
+        ColorfulBlock colorfulBlock = block.GetComponent<ColorfulBlock>();
+        colorfulBlock.life = UnityEngine.Random.Range(hardnessLevel / 4, hardnessLevel);
+        colorfulBlock.setRandomColor();
     }
 
     private void generateLine(int level)
     {
         for (int j = 0; j < blocksInRow; j++)
         {
+            Vector3 pos = new Vector3(leftX + blockSize * j, topY - blockSize * level, 0);
             randomizeBlock();
-            Instantiate(block, new Vector3(leftX + blockSize * j, topY - blockSize * level, 0), Quaternion.identity);//4x6 klocow
+            Instantiate(block,pos , Quaternion.identity);//4x6 klocow
         }
     }
 
-    private bool moveAllBlocksLevelsDown(int level)
-    {
+    public bool checkIfLost() {
         GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
         foreach (GameObject blockObject in arr)
-        {
-            blockObject.transform.Translate(new Vector3(0, -1.0f));
             if (blockObject.transform.position.y < minBlockLevel)
-                return false;
-        }
-        return true;
+                return true;
+        return false;
+    }
+
+    private void moveAllBlocksLevelsDown(int level){
+        GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject blockObject in arr)
+            blockObject.transform.Translate(new Vector3(0, -1.0f));
     }
 
     internal void SaveBlocks()

@@ -18,7 +18,12 @@ public class BlocksManager : MonoBehaviour
     public float blockSize = 1.0f;
 
     private int hardnessLevel = 1;
-    //TODO
+    private string BlocksFilePath;
+
+    private void Start()
+    {
+        BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
+    }
     /// <summary>
     /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
     /// </summary>
@@ -59,7 +64,7 @@ public class BlocksManager : MonoBehaviour
     internal void SaveBlocks()
     {
        BinaryFormatter bf = new BinaryFormatter();
-	   FileStream file = File.Create(Application.persistentDataPath + "/gameInfo.dat");
+	   FileStream file = File.Create(BlocksFilePath);
 	   GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
 	   BlockData bd = new BlockData(arr.Length);
 	   int i=0;
@@ -82,10 +87,10 @@ public class BlocksManager : MonoBehaviour
 	
     internal void LoadBlocks()
     {
-		if(File.Exists(Application.persistentDataPath + "/gameInfo.dat"))
+		if(File.Exists(BlocksFilePath))
 		{
 		   BinaryFormatter bf = new BinaryFormatter();
-		   FileStream file = File.Open(Application.persistentDataPath + "/gameInfo.dat", FileMode.Open);
+		   FileStream file = File.Open(BlocksFilePath, FileMode.Open);
 		   BlockData bd = (BlockData)bf.Deserialize(file);
 		   file.Close();
 		   for(int i=0; i<bd.amtOfBlocks; i++){
@@ -97,9 +102,9 @@ public class BlocksManager : MonoBehaviour
 		   }
 		}
 	}
-    internal void ForgotBlocks()
+    internal void ForgetBlocks()
     {
-        
+        File.Delete(BlocksFilePath);
     }
 }
 

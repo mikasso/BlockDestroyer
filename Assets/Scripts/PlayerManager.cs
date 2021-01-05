@@ -25,13 +25,19 @@ public class PlayerManager : MonoBehaviour
     private int score = 0;
     private int bestScore = 0;
     private int ballsAmount;
+
+    public static void ForgetPlayerVariables()
+    {
+        PlayerPrefs.DeleteKey(Key.LastBall);
+        PlayerPrefs.DeleteKey(Key.BallAmount);
+        PlayerPrefs.DeleteKey(Key.LastScore);
+        PlayerPrefs.DeleteKey(Key.GameIsSaved);
+    }
     public void Start()
     {
         bm = GetComponent<BlocksManager>();
         if (PlayerPrefs.HasKey(Key.GameIsSaved) == true)
-        {
             bm.LoadBlocks();
-        }
         else
             bm.GenerateNewLineOfBlocks();
         
@@ -98,10 +104,8 @@ public class PlayerManager : MonoBehaviour
 
     internal void LostGame()
     {
-        PlayerPrefs.DeleteKey(Key.LastBall);
-        PlayerPrefs.DeleteKey(Key.BallAmount);
-        PlayerPrefs.DeleteKey(Key.LastScore);
-        bm.ForgotBlocks();
+        ForgetPlayerVariables();
+        bm.ForgetBlocks();
         //set new best score
         if(bestScore < score)
         {

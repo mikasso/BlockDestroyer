@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallsManager : MonoBehaviour
 {
+    public bool SpeedUp = false;
     public void killAllBalls()
     {
         GameObject[] balls = getBallsGameObjectsArr();
@@ -18,4 +19,21 @@ public class BallsManager : MonoBehaviour
         return GameObject.FindGameObjectsWithTag("Ball");
     }
 
+    public void speedUpUntilThereAreAnyBalls()
+    {
+        SpeedUp = true;
+        Time.timeScale = 3;
+    }
+
+    private void Update()
+    {
+        if (SpeedUp == true)
+        {
+            if(GameObject.FindGameObjectWithTag("Ball") == null) // none of balls is alive
+            {
+                Time.timeScale = 1;
+                SpeedUp = false;
+            }
+        }
+    }
 }

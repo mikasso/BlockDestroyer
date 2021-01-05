@@ -112,7 +112,8 @@ public class ShootingController : MonoBehaviour
     {
         PlayerManager pm = GetComponent<PlayerManager>();
         BlocksManager bm = GetComponent<BlocksManager>();
-        if (bm.GenerateNewLineOfBlocks() == true)
+        bm.GenerateNewLineOfBlocks();
+        if (bm.checkIfLost() == false)
         {
             amount += 1;
             pm.IncreaseBallsAmount();

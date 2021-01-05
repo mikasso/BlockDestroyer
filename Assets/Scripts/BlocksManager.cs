@@ -22,14 +22,12 @@ public class BlocksManager : MonoBehaviour
     {
         BlocksFilePath = Application.persistentDataPath + "/gameInfo.dat"; 
     }
-    /// <summary>
-    /// <returns>Return true if new generated line is above min level else false which means losing a game .</returns>
-    /// </summary>
-    internal bool GenerateNewLineOfBlocks()
+
+    internal void GenerateNewLineOfBlocks()
     {
         hardnessLevel++;
         generateLine(-1);
-        return moveAllBlocksLevelsDown(level: 1);
+        moveAllBlocksLevelsDown(level: 1);
     }
 
     private void randomizeBlock()
@@ -45,20 +43,22 @@ public class BlocksManager : MonoBehaviour
         {
             Vector3 pos = new Vector3(leftX + blockSize * j, topY - blockSize * level, 0);
             randomizeBlock();
-            Instantiate(block,pos, Quaternion.identity);//4x6 klocow
+            Instantiate(block,pos , Quaternion.identity);//4x6 klocow
         }
     }
 
-    private bool moveAllBlocksLevelsDown(int level)
-    {
+    public bool checkIfLost() {
         GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
         foreach (GameObject blockObject in arr)
-        {
-            blockObject.transform.Translate(new Vector3(0, -1.0f));
             if (blockObject.transform.position.y < minBlockLevel)
-                return false;
-        }
-        return true;
+                return true;
+        return false;
+    }
+
+    private void moveAllBlocksLevelsDown(int level){
+        GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject blockObject in arr)
+            blockObject.transform.Translate(new Vector3(0, -1.0f));
     }
 
     internal void SaveBlocks()

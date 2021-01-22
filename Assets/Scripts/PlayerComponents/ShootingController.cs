@@ -12,7 +12,10 @@ public class ShootingController : MonoBehaviour
     public float maxY = 9.0f;
     public float minX = 0.15f;
     public float maxX = 8.77f;
-
+    public float minDegree = 5.0f;
+    public int Amount { get { return amount; } }
+    public string BallName { get { return ball.name; } }
+    private PlayerManager player;
     private Camera cam;
     private LineRenderer lr;
     private bool lineIsDrawn;
@@ -21,17 +24,17 @@ public class ShootingController : MonoBehaviour
     private bool endOfShooting;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
+        cam = Camera.main;
+        player = GetComponent<PlayerManager>();
         initShootingParameters();
         initLineRendering();
         clearLine();
-        cam = Camera.main;
     }
 
     private void initShootingParameters()
     {
-        PlayerManager player = GetComponent<PlayerManager>();
         amount = player.ReadInteger(PlayerManager.Key.BallAmount, player.InitalBallsAmount);
         string ballPath = "Prefabs/" + player.ReadBallName();
         ball = Resources.Load<GameObject>(ballPath).GetComponent<Ball>();
@@ -45,20 +48,21 @@ public class ShootingController : MonoBehaviour
         lr.startWidth = lr.endWidth = lineWidth;
     }
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         if (CheckIfCanShoot() == false)
             return;
 
-        if (Input.GetMouseButton(0)) {
-           Vector3 tapPoint = getTapPlace();
-            if (checkIfYIsInScope(tapPoint.y) == false) 
+        if (Input.GetMouseButtonDown(0)) {          //user has clicked somewhere
+            Debug.Log("clicked");
+            Vector3 tapPoint = getTapPlace();
+            if (checkIfYIsInScope(tapPoint) == false)
                 clearLine();
-            else if (lineIsDrawn == false) 
+            else if (lineIsDrawn == false)
                 initLine(tapPoint);
-            else
-                reArrangeLine(tapPoint);
-        } else if (lineIsDrawn == true)
+        }else if (Input.GetMouseButton(0) && lineIsDrawn)          
+                reArrangeLine(getTapPlace());   //user has dragged pointer to somewhere
+        else if (lineIsDrawn == true)
             startShooting();
     }
 
@@ -69,7 +73,8 @@ public class ShootingController : MonoBehaviour
         else if (endOfShooting == true)
         {
             endOfShooting = false;
-            onEndOfShooting();
+            amount++;
+            player.AfterShootingJobs();
             return true;
         }
         else
@@ -80,6 +85,7 @@ public class ShootingController : MonoBehaviour
     {
         tapPoint.x = adjustXPos(tapPoint.x);
         lr.SetPosition(0, new Vector2(tapPoint.x, minY));
+        lr.SetPosition(1, new Vector2(tapPoint.x, minY+0.01f));
         lineIsDrawn = true;
     }
     private void reArrangeLine(Vector3 tapPoint)
@@ -87,7 +93,17 @@ public class ShootingController : MonoBehaviour
         Vector2 origin = lr.GetPosition(0);
         Vector2 direction = new Vector2(tapPoint.x - origin.x, tapPoint.y - origin.y);
         RaycastHit2D hit2D = Physics2D.Raycast(origin, direction);
-        lr.SetPosition(1, hit2D.point);
+        Vector2 hitPoint = hit2D.point;
+        float yDistance = Mathf.Abs(hitPoint.y - origin.y);
+        float xDistance = Mathf.Abs(hitPoint.x - origin.x);
+        float angle = Mathf.Atan2(yDistance, xDistance);
+        if (Mathf.Rad2Deg * angle >= minDegree)
+            lr.SetPosition(1, hitPoint);
+        else
+        {
+            Debug.Log("Angle is too small");
+            clearLine();
+        }
     }
 
     private void startShooting()
@@ -107,24 +123,6 @@ public class ShootingController : MonoBehaviour
             yield return new WaitForSeconds(shootingIntervals);
         }
     }
-
-    private void onEndOfShooting()
-    {
-        PlayerManager pm = GetComponent<PlayerManager>();
-        BlocksManager bm = GetComponent<BlocksManager>();
-        bm.GenerateNewLineOfBlocks();
-        if (bm.checkIfLost() == false)
-        {
-            amount += 1;
-            pm.IncreaseBallsAmount();
-        }
-        else // it s a lost game, end..
-        {
-            pm.LostGame();
-            enabled = false; // turn off this component.. no more shooting ;(
-        }
-    }
-
     void clearLine()
     {
         Vector2 point = new Vector2(0, 0);
@@ -146,13 +144,12 @@ public class ShootingController : MonoBehaviour
         return x;
     }
 
-    private bool checkIfYIsInScope(float y)
+    private bool checkIfYIsInScope(Vector3 tapPlace)
     {
+        float y = tapPlace.y;
         if (y < minY || y > maxY)
             return false;
+
         return true;
     }
-
-    public int Amount { get { return amount; } }
-    public string BallName { get { return ball.name; } }
 }

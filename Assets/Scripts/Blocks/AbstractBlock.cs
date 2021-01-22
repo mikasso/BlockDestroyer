@@ -6,40 +6,50 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class AbstractBlock : MonoBehaviour
 {
-    public int life;
-    public PlayerManager player;
-    public Canvas canvas;
-    
+    public int Life {
+        get
+        {
+            return life;
+        }
+        set
+        {
+            life = value;
+            if (life <= 0)
+            {
+                Destroy(gameObject);
+            }
+            else
+                updateLifeScore();
+        }
+    }
+
     protected Text textInfo;
     protected int hitValue = 1;
+
+    private int life = 1;
+    private PlayerManager player;
+    private Canvas canvas;
     // Start is called before the first frame update
-    protected virtual void Start()
+    public virtual void Awake()
     {
         // ps.Pause();
+        player = GameObject.Find("Player").GetComponent<PlayerManager>();
         canvas = gameObject.GetComponentInChildren<Canvas>();
         canvas.worldCamera = Camera.main;
         textInfo = canvas.GetComponentInChildren<Text>();
-        GameObject obj = GameObject.Find("Player");
-        player = obj.GetComponent<PlayerManager>();
         updateLifeScore();
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        Ball ball = collision.gameObject.GetComponent<Ball>();
+        Life--;
         player.IncreaseScore(hitValue);
-        life -= ball.damage;
-        if (life <= 0)
-        {
-            Destroy(gameObject);
-        }
-        else
-            updateLifeScore();
     }
 
     private void updateLifeScore()
     {
-        textInfo.text = life.ToString();
+        Debug.Log(textInfo);
+        textInfo.text = Life.ToString();
     }
 	
 }

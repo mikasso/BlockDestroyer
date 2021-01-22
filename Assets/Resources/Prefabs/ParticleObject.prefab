@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3188299535372834787}
-  - component: {fileID: -6353481533107910940}
   m_Layer: 0
   m_Name: ParticleObject
   m_TagString: Untagged
@@ -32,19 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6353481533107910940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7672876996085062854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e15ce996b6e46a4eb6081d87f7363c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 1
 --- !u!1001 &7700400079850803131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52,6 +38,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3188299535372834787}
     m_Modifications:
+    - target: {fileID: 7626372746432609793, guid: 8d00369ac3e8ba448ae9a2ded041a3f2, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.7860744
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626372746432609793, guid: 8d00369ac3e8ba448ae9a2ded041a3f2, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.12383617
+      objectReference: {fileID: 0}
     - target: {fileID: 7626372746432609794, guid: 8d00369ac3e8ba448ae9a2ded041a3f2, type: 3}
       propertyPath: m_RootOrder
       value: 0

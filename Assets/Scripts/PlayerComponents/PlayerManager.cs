@@ -21,9 +21,10 @@ public class PlayerManager : MonoBehaviour
     public Text scoreText;
     public Text ballsText;
     public Canvas canvasGameOverModel;
+    public GameObject GameController;
 
-    private Canvas displayedCanvas;
     private BlocksManager bm;
+    private Canvas displayedCanvas;
     private int score = 0;
     private int bestScore = 0;
     private int ballsAmount;
@@ -37,14 +38,18 @@ public class PlayerManager : MonoBehaviour
     }
     public void Start()
     {
+        bm = GameController.GetComponent<BlocksManager>();
         canvasGameOverModel.worldCamera = Camera.main;
-
-        bm = GetComponent<BlocksManager>();
         if (PlayerPrefs.HasKey(Key.GameIsSaved) == true)
+        {
+            Debug.Log("try load");
             bm.LoadBlocks();
+        }
         else
+        {
+            Debug.Log("nothing to load");
             bm.GenerateNewLineOfBlocks();
-
+        }
         bestScore = ReadInteger(Key.BestScore);
         score = ReadInteger(Key.LastScore);
         ballsAmount = ReadInteger(Key.BallAmount, InitalBallsAmount);
@@ -52,15 +57,26 @@ public class PlayerManager : MonoBehaviour
         updateScore();
         updateBest();
     }
+
+    public void AfterShootingJobs()
+    {
+        bm.GenerateNewLineOfBlocks();
+        if (bm.checkIfLost() == false)
+        {
+            updateBallsAmount();
+            SaveGame();
+            Debug.Log("saved");
+        }
+        else // it s a lost game, end..
+        {
+            LostGame();
+            enabled = false; // turn off this component.. no more shooting ;(
+        }
+    }
     public void IncreaseScore(int value)
     {
         score += value;
         updateScore();
-    }
-    internal void IncreaseBallsAmount()
-    {
-        ballsAmount += 1;
-        updateBallsAmount();
     }
 
     internal int ReadInteger(string key, int defaultValue = 0)
@@ -87,7 +103,6 @@ public class PlayerManager : MonoBehaviour
         PlayerPrefs.SetInt(Key.GameIsSaved, 1);
         bm.SaveBlocks();
         PlayerPrefs.Save();
-        LoadMenu();
     }
 
     public static void LoadMenu()
@@ -117,6 +132,7 @@ public class PlayerManager : MonoBehaviour
     }
     private void updateBallsAmount()
     {
+        ballsAmount = GetComponent<ShootingController>().Amount;
         ballsText.text = "Balls: " + ballsAmount.ToString();
     }
 

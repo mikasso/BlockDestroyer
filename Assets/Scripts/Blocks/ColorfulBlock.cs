@@ -1,27 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ColorfulBlock : AbstractBlock
 {
-    // Start is called before the first frame update
-    public GameObject particleObject;
-    override protected void Start()
+    private ParticlePoll particlePoll;
+    private ColorsPoll colorsPoll;
+    private GameObject GameController;
+    public override void Awake()
     {
-        base.Start();
+        Debug.Log("Awake colorful");
+        base.Awake();
+        GameController = GameObject.Find("GameController");
+        particlePoll = GameController.GetComponent<ParticlePoll>();
+        colorsPoll = GameController.GetComponent<ColorsPoll>();
     }
-
     override protected void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        ParticleSystem.MainModule newMain = particleObject.GetComponentInChildren<ParticleSystem>().main;
-        newMain.startColor = GetComponent<SpriteRenderer>().color;
-        Instantiate(particleObject, collision.transform.position, Quaternion.identity);
-        setRandomColor();
+        ChangeColorToRandom();
+        particlePoll.PlayOneShot(collision.transform.position);
     }
 
-    public void setRandomColor()
+    internal void ChangeColorToRandom()
     {
-        GetComponent<SpriteRenderer>().color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.75f, 1f);
-    }
+        GetComponent<SpriteRenderer>().color = colorsPoll.GetRandomColor();
+    }    
 }

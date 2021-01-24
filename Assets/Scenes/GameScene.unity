@@ -156,12 +156,12 @@ MonoBehaviour:
   shootingIntervals: 0.1
   lineWidth: 0.05
   lineMaterial: {fileID: 2100000, guid: 3fcf556ef99329c41a789f6f46bf3788, type: 2}
-  speed: 6
+  speed: 7
   minY: 0.3
   maxY: 9
   minX: 0
   maxX: 8.77
-  minDegree: 5
+  minDegree: 10
 --- !u!114 &52771926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -871,8 +871,8 @@ MonoBehaviour:
   leftX: 0.45
   topY: 8.5
   blockSize: 1
-  minBlockLevel: 2
-  hardnessLevel: 10
+  minBlockLevel: 1
+  StartingLevel: 6
 --- !u!114 &1003723958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1037,6 +1037,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746336221}
     m_Modifications:
+    - target: {fileID: -5356251152532721782, guid: b81a33f4640e5d742a90059b8a164a7e, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 31ff2c8810d0a3a42a530812480fe24c, type: 2}
     - target: {fileID: 2014091936096838007, guid: b81a33f4640e5d742a90059b8a164a7e, type: 3}
       propertyPath: m_Name
       value: RightWall
@@ -1589,6 +1593,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746336221}
     m_Modifications:
+    - target: {fileID: -5356251152532721782, guid: b81a33f4640e5d742a90059b8a164a7e, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 31ff2c8810d0a3a42a530812480fe24c, type: 2}
     - target: {fileID: 2014091936096838007, guid: b81a33f4640e5d742a90059b8a164a7e, type: 3}
       propertyPath: m_Name
       value: LeftWall
@@ -1650,6 +1658,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746336221}
     m_Modifications:
+    - target: {fileID: 5406909878520404980, guid: a9fe5d2bb45ff104bb68983580279289, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 31ff2c8810d0a3a42a530812480fe24c, type: 2}
     - target: {fileID: 5406909878520404982, guid: a9fe5d2bb45ff104bb68983580279289, type: 3}
       propertyPath: m_RootOrder
       value: 3

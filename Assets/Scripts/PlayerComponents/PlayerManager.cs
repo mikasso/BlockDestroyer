@@ -5,16 +5,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+enum GameStatus
+{
+    LOST,
+    ON,
+}
+public static class Key
+{
+    public const string LastScore = "LastScore";
+    public const string BestScore = "BestScore";
+    public const string LastBall = "BallName";
+    public const string BallAmount = "BallAmount";
+    public const string GameIsSaved = "GameIsSaved";
+    public const string HardnessLevel = "HardnessLevel";
+}
 public class PlayerManager : MonoBehaviour
 {
-    public static class Key
-    {
-        public const string LastScore = "LastScore";
-        public const string BestScore = "BestScore";
-        public const string LastBall = "BallName";
-        public const string BallAmount = "BallAmount";
-        public const string GameIsSaved = "GameIsSaved";
-    }
     public int InitalBallsAmount = 1;
     public const string DefaultBallName = "BlueBall";
     public Text bestText;
@@ -23,18 +29,17 @@ public class PlayerManager : MonoBehaviour
     public Canvas canvasGameOverModel;
     public GameObject GameController;
 
+    private GameStatus gameStatus = GameStatus.ON;
     private BlocksManager bm;
-    private Canvas displayedCanvas;
     private int score = 0;
     private int bestScore = 0;
     private int ballsAmount;
 
     public static void ForgetPlayerVariables()
     {
-        PlayerPrefs.DeleteKey(Key.LastBall);
-        PlayerPrefs.DeleteKey(Key.BallAmount);
-        PlayerPrefs.DeleteKey(Key.LastScore);
-        PlayerPrefs.DeleteKey(Key.GameIsSaved);
+        int bestScore = PlayerPrefs.GetInt(Key.BestScore);
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt(Key.BestScore, bestScore);
     }
     public void Start()
     {
@@ -58,19 +63,22 @@ public class PlayerManager : MonoBehaviour
         updateBest();
     }
 
-    public void AfterShootingJobs()
-    {
+    /// <returns> false if round can not be started, which means the game is lost, otherwise true</returns>
+    public bool StartNextRound()
+    {   
+        if (gameStatus == GameStatus.LOST)
+            return false;
         bm.GenerateNewLineOfBlocks();
         if (bm.checkIfLost() == false)
         {
             updateBallsAmount();
             SaveGame();
-            Debug.Log("saved");
+            return true;
         }
         else // it s a lost game, end..
         {
             LostGame();
-            enabled = false; // turn off this component.. no more shooting ;(
+            return false;
         }
     }
     public void IncreaseScore(int value)
@@ -94,14 +102,15 @@ public class PlayerManager : MonoBehaviour
         else
             return DefaultBallName;
     }
+
     public void SaveGame()
     {
         ShootingController controller = GetComponent<ShootingController>();
         PlayerPrefs.SetInt(Key.LastScore, score);
         PlayerPrefs.SetInt(Key.BallAmount, controller.Amount);
         PlayerPrefs.SetString(Key.LastBall, controller.BallName);
-        PlayerPrefs.SetInt(Key.GameIsSaved, 1);
         bm.SaveBlocks();
+        PlayerPrefs.SetInt(Key.GameIsSaved, 1);
         PlayerPrefs.Save();
     }
 
@@ -112,10 +121,11 @@ public class PlayerManager : MonoBehaviour
 
     internal void LostGame()
     {
+        gameStatus = GameStatus.LOST;
         ForgetPlayerVariables();
         bm.ForgetBlocks();
         setNewBestScore();
-        displayedCanvas = Instantiate(canvasGameOverModel);
+        Instantiate(canvasGameOverModel);
     }
 
     private void setNewBestScore()

@@ -36,4 +36,12 @@ public class BallsManager : MonoBehaviour
             }
         }
     }
+
+    public void OnDisable()
+    {
+        Time.timeScale = 1;
+        SpeedUp = false;
+    }
+
+
 }

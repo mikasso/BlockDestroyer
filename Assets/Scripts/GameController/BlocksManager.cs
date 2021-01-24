@@ -14,9 +14,10 @@ public class BlocksManager : MonoBehaviour
     public float topY = 10.0f;
     public float blockSize = 1.0f;
     public float minBlockLevel = 2.0f;
+    public int StartingLevel = 6;
 
     private string BlocksFilePath;
-    public int hardnessLevel = 10;
+    private int hardnessLevel = 6;
     private System.Random random = new System.Random();
     void Awake()
     {
@@ -40,8 +41,13 @@ public class BlocksManager : MonoBehaviour
             GameObject b = Instantiate(block,pos , Quaternion.identity);//4x6 klocow
             ColorfulBlock colorfulBlock = b.GetComponent<ColorfulBlock>();
             colorfulBlock.ChangeColorToRandom();
-            colorfulBlock.Life = random.Next(hardnessLevel / 2, hardnessLevel);
+            colorfulBlock.Life = GenerateRandomLife();
         }
+    }
+
+    private int GenerateRandomLife()
+    {
+        return random.Next(1, hardnessLevel/2) + random.Next(1, hardnessLevel/2);
     }
 
     public bool checkIfLost() {
@@ -60,6 +66,7 @@ public class BlocksManager : MonoBehaviour
 
     internal void SaveBlocks()
     {
+       PlayerPrefs.SetInt(Key.HardnessLevel, hardnessLevel);
        BinaryFormatter bf = new BinaryFormatter();
 	   FileStream file = File.Create(BlocksFilePath);
 	   GameObject[] arr = GameObject.FindGameObjectsWithTag("Block");
@@ -86,8 +93,12 @@ public class BlocksManager : MonoBehaviour
     {
 		if(File.Exists(BlocksFilePath))
 		{
-            Debug.Log("File opened");
-            BinaryFormatter bf = new BinaryFormatter();
+            if (PlayerPrefs.HasKey(Key.HardnessLevel))
+                hardnessLevel = PlayerPrefs.GetInt(Key.HardnessLevel);
+            else
+                hardnessLevel = StartingLevel;
+
+           BinaryFormatter bf = new BinaryFormatter();
 		   FileStream file = File.Open(BlocksFilePath, FileMode.Open);
 		   BlockData bd = (BlockData)bf.Deserialize(file);
 		   file.Close();

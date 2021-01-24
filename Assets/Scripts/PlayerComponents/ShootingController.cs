@@ -35,12 +35,13 @@ public class ShootingController : MonoBehaviour
 
     private void initShootingParameters()
     {
-        amount = player.ReadInteger(PlayerManager.Key.BallAmount, player.InitalBallsAmount);
+        amount = player.ReadInteger(Key.BallAmount, player.InitalBallsAmount);
         string ballPath = "Prefabs/" + player.ReadBallName();
         ball = Resources.Load<GameObject>(ballPath).GetComponent<Ball>();
     }
 
-    void initLineRendering() {
+    void initLineRendering()
+    {
         GameObject myLine = new GameObject();
         myLine.AddComponent<LineRenderer>();
         lr = myLine.GetComponent<LineRenderer>();
@@ -52,16 +53,19 @@ public class ShootingController : MonoBehaviour
     {
         if (CheckIfCanShoot() == false)
             return;
+        if (endOfShooting == true)
+            AfterShooting();
 
-        if (Input.GetMouseButtonDown(0)) {          //user has clicked somewhere
-            Debug.Log("clicked");
+        if (Input.GetMouseButtonDown(0))
+        {          //user has clicked somewhere
             Vector3 tapPoint = getTapPlace();
             if (checkIfYIsInScope(tapPoint) == false)
                 clearLine();
             else if (lineIsDrawn == false)
                 initLine(tapPoint);
-        }else if (Input.GetMouseButton(0) && lineIsDrawn)          
-                reArrangeLine(getTapPlace());   //user has dragged pointer to somewhere
+        }
+        else if (Input.GetMouseButton(0) && lineIsDrawn)
+            reArrangeLine(getTapPlace());   //user has dragged pointer to somewhere
         else if (lineIsDrawn == true)
             startShooting();
     }
@@ -70,26 +74,32 @@ public class ShootingController : MonoBehaviour
     {
         if (GameObject.FindGameObjectWithTag("Ball"))
             return false;
-        else if (endOfShooting == true)
-        {
-            endOfShooting = false;
-            amount++;
-            player.AfterShootingJobs();
-            return true;
-        }
-        else
-            return true;
+        return true;
+    }
+
+    void AfterShooting()
+    {
+        endOfShooting = false;
+        amount++;
+        if (player.StartNextRound() == false)
+            this.enabled = false;
     }
 
     private void initLine(Vector3 tapPoint)
     {
         tapPoint.x = adjustXPos(tapPoint.x);
         lr.SetPosition(0, new Vector2(tapPoint.x, minY));
-        lr.SetPosition(1, new Vector2(tapPoint.x, minY+0.01f));
+        lr.SetPosition(1, new Vector2(tapPoint.x, minY + 0.01f));
         lineIsDrawn = true;
     }
     private void reArrangeLine(Vector3 tapPoint)
     {
+        if (tapPoint.y < minY/2)
+        {
+            Debug.Log("Y is too small");
+            clearLine();
+            return;
+        }
         Vector2 origin = lr.GetPosition(0);
         Vector2 direction = new Vector2(tapPoint.x - origin.x, tapPoint.y - origin.y);
         RaycastHit2D hit2D = Physics2D.Raycast(origin, direction);
@@ -102,7 +112,6 @@ public class ShootingController : MonoBehaviour
         else
         {
             Debug.Log("Angle is too small");
-            clearLine();
         }
     }
 
@@ -114,7 +123,7 @@ public class ShootingController : MonoBehaviour
         clearLine();
         endOfShooting = true;
     }
-    IEnumerator spawnBalls(Ball ball, Vector3 position,Vector3 velocity)
+    IEnumerator spawnBalls(Ball ball, Vector3 position, Vector3 velocity)
     {
         for (int i = 0; i < amount; i++)
         {
